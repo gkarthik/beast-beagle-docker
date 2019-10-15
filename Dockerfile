@@ -22,3 +22,14 @@ mv BEASTv1.10.4/bin/* /usr/local/bin && \
 mv BEASTv1.10.4/lib/* /usr/local/lib && \
 rm BEASTv1.10.4.tgz
 
+# AWS cli
+RUN apt-get install -y python3 python3-pip
+RUN pip3 install awscli
+
+RUN mkdir /credentials /data
+
+COPY ./credentials.txt /credentials/
+COPY ./*.xml /data/
+
+RUN cat /credentials/credentials.txt | aws configure --profile beast-user
+ENV AWS_DEFAULT_PROFILE="beast-user"
