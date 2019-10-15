@@ -8,11 +8,11 @@ RUN apt-get install -y wget build-essential autoconf automake libtool git pkg-co
 
 RUN wget https://github.com/beagle-dev/beagle-lib/archive/v3.1.2.tar.gz && \
 tar xf v3.1.2.tar.gz &&\
+rm v3.1.2.tar.gz && \
 cd beagle-lib-3.1.2/ &&\
 ./autogen.sh && \
 ./configure --prefix=$HOME && \
-make install && \
-rm v3.1.2.tar.gz
+make install
 
 ENV LD_LIBRARY_PATH="/root/lib:${LD_LIBRARY_PATH}"
 
