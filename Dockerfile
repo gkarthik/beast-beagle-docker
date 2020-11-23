@@ -12,7 +12,7 @@ cd beagle-lib &&\
 ./configure --prefix=$HOME && \
 make && \
 make install && \
-cat "export LD_LIBRARY_PATH=$HOME/lib:$LD_LIBRARY_PATH" >> ~/.bashrc
+echo "export LD_LIBRARY_PATH=$HOME/lib:$LD_LIBRARY_PATH" >> ~/.bashrc
 
 ENV LD_LIBRARY_PATH $HOME/lib:$LD_LIBRARY_PATH
 ENV JAVA_TOOL_OPTIONS -Dfile.encoding=UTF8
@@ -30,6 +30,6 @@ ant
 RUN git clone https://github.com/gkarthik/beast-beagle-docker.git
 
 WORKDIR /root/beast-beagle-docker/
-RUN chmox u+x run.sh
+RUN chmod u+x run.sh
 
 ENTRYPOINT ["./run.sh"]
