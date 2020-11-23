@@ -1,37 +1,35 @@
 FROM nvidia/cuda:10.1-devel-ubuntu18.04
 MAINTAINER gkarthik <gkarthik@scripps.edu>
 
-ARG S3_DIR
-
 WORKDIR /root/
 
 RUN apt-get update -qq
-RUN apt-get install -qq -y wget build-essential autoconf automake libtool git pkg-config openjdk-11-jdk
+RUN apt-get install -qq -y wget build-essential autoconf automake libtool git pkg-config openjdk-11-jdk vim ant
 
-RUN wget https://github.com/beagle-dev/beagle-lib/archive/v3.1.2.tar.gz && \
-tar xf v3.1.2.tar.gz &&\
-rm v3.1.2.tar.gz && \
-cd beagle-lib-3.1.2/ &&\
+RUN git clone https://github.com/beagle-dev/beagle-lib.git && \
+cd beagle-lib &&\
 ./autogen.sh && \
 ./configure --prefix=$HOME && \
-make install
+make && \
+make install && \
+cat "export LD_LIBRARY_PATH=$HOME/lib:$LD_LIBRARY_PATH" >> ~/.bashrc
 
-ENV LD_LIBRARY_PATH /root/lib:$LD_LIBRARY_PATH
+ENV LD_LIBRARY_PATH $HOME/lib:$LD_LIBRARY_PATH
+ENV JAVA_TOOL_OPTIONS -Dfile.encoding=UTF8
 
-RUN wget https://github.com/beast-dev/beast-mcmc/releases/download/v1.10.4/BEASTv1.10.4.tgz && \
-tar xf BEASTv1.10.4.tgz && \
-mv BEASTv1.10.4/bin/* /usr/local/bin && \
-mv BEASTv1.10.4/lib/* /usr/local/lib && \
-rm BEASTv1.10.4.tgz
+RUN wget https://github.com/beast-dev/beast-mcmc/releases/download/v1.10.5pre1/BEASTv1.10.5pre.tgz && \
+tar xf BEASTv1.10.5pre.tgz && \
+mv BEASTv1.10.5pre/bin/* /usr/local/bin && \
+mv BEASTv1.10.5pre/lib/* /usr/local/lib && \
+rm BEASTv1.10.5pre.tgz
 
-# AWS cli
-RUN apt-get install -y -qq python3 python3-pip groff
-RUN pip3 install awscli
+RUN git clone -b ancestral_path https://github.com/beast-dev/beast-mcmc.git && \
+cd beast-mcmc && \
+ant
 
-RUN mkdir /credentials /data
+RUN git clone https://github.com/gkarthik/beast-beagle-docker.git
 
-COPY ./credentials.txt /credentials/
-COPY ./*.xml /data/
+WORKDIR /root/beast-beagle-docker/
+RUN chmox u+x run.sh
 
-RUN cat /credentials/credentials.txt | aws configure --profile beast-user
-ENV AWS_DEFAULT_PROFILE="beast-user"
+ENTRYPOINT ["./run.sh"]
