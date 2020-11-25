@@ -33,4 +33,4 @@ WORKDIR /root/beast-beagle-docker/
 RUN chmod u+x run.sh
 
 WORKDIR /data/
-ENTRYPOINT ["/root/beast-beagle-docker/run.sh"]
+ENTRYPOINT ["/bin/bash", "-c", "/root/beast-beagle-docker/run.sh"]

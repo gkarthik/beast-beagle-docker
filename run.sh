@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source ~/.bashrc
+
 args=($@)
 xml=${args[0]}
 runnum=${args[1]}
