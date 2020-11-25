@@ -32,4 +32,5 @@ RUN git clone https://github.com/gkarthik/beast-beagle-docker.git
 WORKDIR /root/beast-beagle-docker/
 RUN chmod u+x run.sh
 
-ENTRYPOINT ["./run.sh"]
+WORKDIR /data/
+ENTRYPOINT ["/root/beast-beagle-docker/run.sh"]
