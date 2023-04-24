@@ -17,11 +17,11 @@ echo "export LD_LIBRARY_PATH=$HOME/lib:$LD_LIBRARY_PATH" >> ~/.bashrc
 ENV LD_LIBRARY_PATH $HOME/lib:$LD_LIBRARY_PATH
 ENV JAVA_TOOL_OPTIONS -Dfile.encoding=UTF8
 
-RUN wget https://github.com/beast-dev/beast-mcmc/releases/download/v1.10.5pre1/BEASTv1.10.5pre.tgz && \
-tar xf BEASTv1.10.5pre.tgz && \
-mv BEASTv1.10.5pre/bin/* /usr/local/bin && \
-mv BEASTv1.10.5pre/lib/* /usr/local/lib && \
-rm BEASTv1.10.5pre.tgz
+RUN wget https://github.com/beast-dev/beast-mcmc/releases/download/v1.10.5pre_thorney_v0.1.2/BEASTv1.10.5pre_thorney_0.1.2.tgz && \
+tar xf BEASTv1.10.5pre_thorney_0.1.2.tgz && \
+mv BEASTv1.10.5pre_thorney_0.1.2/bin/* /usr/local/bin && \
+mv BEASTv1.10.5pre_thorney_0.1.2/lib/* /usr/local/lib && \
+rm BEASTv1.10.5pre_thorney_0.1.2.tgz
 
 RUN git clone -b ancestral_path https://github.com/beast-dev/beast-mcmc.git && \
 cd beast-mcmc && \
