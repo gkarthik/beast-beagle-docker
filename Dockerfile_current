@@ -1,0 +1,32 @@
+FROM nvidia/cuda:12.8.0-devel-ubuntu22.04
+MAINTAINER gkarthik <gkarthik@scripps.edu>
+
+WORKDIR /root/
+
+RUN apt-get update -qq
+RUN apt-get install -qq -y wget build-essential autoconf automake libtool git pkg-config vim ant cmake default-jdk
+
+RUN git clone https://github.com/beagle-dev/beagle-lib.git && \
+cd beagle-lib &&\
+git checkout hmc-clock &&\
+mkdir build && \
+cd build && \
+cmake -DCMAKE_INSTALL_PREFIX=$(pwd) -DBUILD_OPENCL=OFF -DBUILD_CUDA=ON .. && \
+make && \
+make install && \
+echo "export LD_LIBRARY_PATH=$HOME/beagle-lib/build/lic:$LD_LIBRARY_PATH" >> ~/.bashrc
+
+ENV LD_LIBRARY_PATH $HOME/lib:$LD_LIBRARY_PATH
+ENV JAVA_TOOL_OPTIONS -Dfile.encoding=UTF8
+
+RUN git clone https://github.com/beast-dev/beast-mcmc.git && \
+cd beast-mcmc && \
+git checkout hmc-clock && \
+ant
+
+RUN apt update && \
+apt install -qq -y --no-install-recommends gnupg && \
+echo "deb http://developer.download.nvidia.com/devtools/repos/ubuntu2204/amd64 /" | tee /etc/apt/sources.list.d/nvidia-devtools.list && \
+apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub && \
+apt update && \
+apt install -qq -y nsight-systems-cli
